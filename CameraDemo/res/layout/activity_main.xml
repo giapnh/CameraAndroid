@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+    	android:layout_height="match_parent"
+    	android:id="@+id/framlayout"
+        />
+    
+    <Button
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_alignParentBottom="true"
+    	android:text="Focus"
+    	android:id="@+id/button"
+    	android:visibility="gone"
+        />
+    
+    <Button
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_centerHorizontal="true"
+    	android:layout_alignParentBottom="true"
+    	android:id="@+id/capture"
+    	android:text="Capture"
+        />
+    
+    <Button
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_centerHorizontal="true"
+    	android:layout_alignParentBottom="true"
+    	android:layout_toRightOf="@+id/capture"
+    	android:id="@+id/switchCamera"
+    	android:text="Switch"
+        />
+    
+    <TextView
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:text="num focus: "
+    	android:id="@+id/numFocusArea"
+        />
+    
+    <TextView
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_below="@+id/numFocusArea" 
+    	android:text="current focus: "
+    	android:id="@+id/currentFocusArea"
+        />
+    
+    <TextView
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_below="@+id/currentFocusArea"
+    	android:id="@+id/distanceToObject"
+        />
+
+</RelativeLayout>
