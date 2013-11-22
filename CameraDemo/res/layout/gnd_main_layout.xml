@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center" >
+
+    <Button
+        android:id="@+id/btn_funny_foto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onFunnyFoto"
+        android:text="Funny Foto" />
+
+    <Button
+        android:id="@+id/btn_funny_game"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_funny_foto"
+        android:onClick="onFunnyGame"
+        android:text="Funny Game" />
+
+    <Button
+        android:id="@+id/btn_my_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_funny_game"
+        android:onClick="onMyGallery"
+        android:text="My Gallery" />
+
+</RelativeLayout>
