@@ -15,6 +15,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.gnd.main.network.Argument;
+import com.gnd.main.network.Command;
+
 public class BluetoothService {
 	// Debugging
 	private static final String TAG = "BluetoothChatService";
@@ -48,26 +51,12 @@ public class BluetoothService {
 	public static final int STATE_CONNECTED = 3; // now connected to a remote
 													// device
 
-	/**
-	 * Constructor. Prepares a new BluetoothChat session.
-	 * 
-	 * @param context
-	 *            The UI Activity Context
-	 * @param handler
-	 *            A Handler to send messages back to the UI Activity
-	 */
 	public BluetoothService(Context context, Handler handler) {
 		mAdapter = BluetoothAdapter.getDefaultAdapter();
 		mState = STATE_NONE;
 		mHandler = handler;
 	}
 
-	/**
-	 * Set the current state of the chat connection
-	 * 
-	 * @param state
-	 *            An integer defining the current connection state
-	 */
 	private synchronized void setState(int state) {
 		if (D)
 			Log.d(TAG, "setState() " + mState + " -> " + state);
@@ -230,13 +219,65 @@ public class BluetoothService {
 	}
 
 	/**
+	 * Sends a message.
+	 * 
+	 * @param message
+	 *            A string of text to send.
+	 */
+	public void sendText(String message) {
+		// Check that there's actually something to send
+		if (message.length() > 0) {
+			// Get the message bytes and tell the BluetoothChatService to write
+			Command cmd = new Command(Command.CMD_SEND_TEXT);
+			cmd.addString(Argument.ARG_TEXT, message);
+			write(cmd);
+		}
+	}
+
+	/**
+	 * Send image data
+	 * 
+	 * @param data
+	 */
+	public void sendImage(byte[] data) {
+		if (data.length > 0) {
+			Command cmd = new Command(Command.CMD_SEND_IMAGE);
+			cmd.addRaw(Argument.ARG_IMAGE, data);
+			write(cmd);
+		}
+	}
+
+	/**
+	 * Send game object to other client
+	 * 
+	 * @param data
+	 * @param config
+	 * @param timeInSeconds
+	 */
+	public void sendGame(byte[] data, byte[] config, int timeInSeconds) {
+		if (data.length > 0 && config.length > 0) {
+			Command cmd = new Command(Command.CMD_SEND_GAME);
+			cmd.addRaw(Argument.ARG_GAME_CONFIG, config);
+			cmd.addRaw(Argument.ARG_IMAGE, data);
+			cmd.addInt(Argument.ARG_TIME, timeInSeconds);
+			write(cmd);
+		}
+	}
+
+	/**
 	 * Write to the ConnectedThread in an unsynchronized manner
 	 * 
 	 * @param out
 	 *            The bytes to write
 	 * @see ConnectedThread#write(byte[])
 	 */
-	public void write(byte[] out) {
+	private void write(Command cmd) {
+		if (getState() != BluetoothService.STATE_CONNECTED) {
+			// Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT)
+			// .show();
+			return;
+		}
+
 		// Create temporary object
 		ConnectedThread r;
 		// Synchronize a copy of the ConnectedThread
@@ -246,7 +287,7 @@ public class BluetoothService {
 			r = mConnectedThread;
 		}
 		// Perform the write unsynchronized
-		r.write(out);
+		r.write(cmd.toBytes());
 	}
 
 	/**
