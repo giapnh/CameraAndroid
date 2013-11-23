@@ -53,7 +53,7 @@ public class BluetoothService {
 													// connection
 	public static final int STATE_CONNECTED = 3; // now connected to a remote
 													// device
-
+	
 	// Local Bluetooth adapter
 	public BluetoothAdapter mBluetoothAdapter = null;
 	// Member object for the chat services

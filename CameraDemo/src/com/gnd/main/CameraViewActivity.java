@@ -30,6 +30,7 @@ import com.gnd.R;
 import com.gnd.main.camera.CameraPreview;
 import com.gnd.main.camera.CropImage;
 import com.gnd.main.camera.Util;
+import com.gnd.main.config.Config;
 
 public class CameraViewActivity extends Activity {
 	private Camera camera = null;
@@ -107,8 +108,8 @@ public class CameraViewActivity extends Activity {
 						intent.putExtra(CropImage.RETURN_DATA, true);
 						intent.putExtra(CropImage.SCALE, true);
 
-						intent.putExtra(CropImage.ASPECT_X, 3);
-						intent.putExtra(CropImage.ASPECT_Y, 2);
+						intent.putExtra(CropImage.ASPECT_X, Config.ASPECT_X);
+						intent.putExtra(CropImage.ASPECT_Y, Config.ASPECT_Y);
 
 						startActivityForResult(intent, CROP_REQUEST_CODE);
 					}
@@ -278,7 +279,7 @@ public class CameraViewActivity extends Activity {
 				Bitmap bitmap = (Bitmap) data
 						.getParcelableExtra(CropImage.RETURN_DATA_AS_BITMAP);
 
-				Intent intent = new Intent(this, ShowCropImageActivity.class);
+				Intent intent = new Intent(this, EditableActivity.class);
 				intent.putExtra(CropImage.RETURN_DATA_AS_BITMAP, bitmap);
 				startActivityForResult(intent, -CROP_REQUEST_CODE);
 			}
