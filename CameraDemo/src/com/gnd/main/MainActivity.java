@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.gnd.R;
+import com.gnd.main.bluetooth.BluetoothService;
 
 public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gnd_main_layout);
+		BluetoothService.getInstance();
 	}
 
 	public void onFunnyFoto(View v) {

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.hardware.Camera.AutoFocusCallback;
 import android.hardware.Camera.CameraInfo;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import com.gnd.R;
 import com.gnd.main.camera.CameraPreview;
 import com.gnd.main.camera.CropImage;
+import com.gnd.main.camera.Util;
 
 public class CameraViewActivity extends Activity {
 	private Camera camera = null;
@@ -71,15 +73,10 @@ public class CameraViewActivity extends Activity {
 
 					@Override
 					public void onPictureTaken(byte[] data, Camera camera) {
-						// Bitmap bitmap = BitmapFactory.decodeByteArray(data,
-						// 0,
-						// data.length);
-						// bitmap = Util.rotateImage(bitmap,
-						// cameraInfo.orientation);
-						camera.stopPreview();
-						screen.setDrawingCacheEnabled(false);
-						screen.setDrawingCacheEnabled(true);
-						Bitmap bitmap = screen.getDrawingCache();
+						Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0,
+								data.length);
+						bitmap = Util.rotateImage(bitmap,
+								cameraInfo.orientation);
 						try {
 							File file = new File(Environment
 									.getExternalStorageDirectory()
@@ -87,7 +84,6 @@ public class CameraViewActivity extends Activity {
 							if (!file.exists()) {
 								file.mkdir();
 							}
-
 							File imageFile = new File(file, "image.jpg");
 							if (imageFile.exists()) {
 								imageFile.createNewFile();
@@ -115,30 +111,6 @@ public class CameraViewActivity extends Activity {
 						intent.putExtra(CropImage.ASPECT_Y, 2);
 
 						startActivityForResult(intent, CROP_REQUEST_CODE);
-
-						/*
-						 * MainActivity.this.camera.stopPreview();
-						 * MainActivity.this.camera.release();
-						 * MainActivity.this.camera = null;
-						 */
-
-						/*
-						 * Intent cropIntent = new
-						 * Intent("com.android.camera.action.CROP");
-						 * cropIntent.setType("image/*"); Bitmap bitmap =
-						 * BitmapFactory
-						 * .decodeFile(Environment.getExternalStorageDirectory()
-						 * + "/CameraTest/image.jpg");
-						 * cropIntent.putExtra("data", bitmap);
-						 * 
-						 * cropIntent.putExtra("crop", "true"); //indicate
-						 * aspect of desired crop cropIntent.putExtra("aspectX",
-						 * 4); cropIntent.putExtra("aspectY", 3); //indicate
-						 * output X and Y cropIntent.putExtra("outputX", 800);
-						 * cropIntent.putExtra("outputY", 800);
-						 * 
-						 * startActivity(cropIntent);
-						 */
 					}
 				});
 			}
