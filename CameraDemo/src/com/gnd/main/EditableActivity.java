@@ -20,7 +20,6 @@ import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -43,7 +42,7 @@ import com.gnd.main.network.Argument;
 import com.gnd.main.network.Command;
 import com.gnd.main.utils.D;
 
-public class ShowCropImageActivity extends Activity implements OnTouchListener {
+public class EditableActivity extends Activity implements OnTouchListener {
 	private Bitmap bitmap;
 	private UiLifecycleHelper uiLifecycleHelper;
 	private Session.StatusCallback callback;
@@ -53,6 +52,7 @@ public class ShowCropImageActivity extends Activity implements OnTouchListener {
 	GestureDetector gestureDetector;
 	public float scaleAmount = 1;
 	ImageView imageView;
+	Button btnSend;
 
 	// Message types sent from the BluetoothChatService Handler
 	public static final int MESSAGE_STATE_CHANGE = 1;
@@ -65,16 +65,9 @@ public class ShowCropImageActivity extends Activity implements OnTouchListener {
 	private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
 	private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
 	private static final int REQUEST_ENABLE_BT = 3;
-
-	// Bluetooth service
-	// Name of the connected device
 	public static String mConnectedDeviceName = null;
-	// Array adapter for the conversation thread
-	private ArrayAdapter<String> mConversationArrayAdapter;
-	// String buffer for outgoing messages
-	private StringBuffer mOutStringBuffer;
-	// Local Bluetooth adapter
-	// Member object for the chat services
+	// private ArrayAdapter<String> mConversationArrayAdapter;
+	// private StringBuffer mOutStringBuffer;
 
 	private final Handler mHandler = new Handler() {
 		@Override
@@ -83,6 +76,7 @@ public class ShowCropImageActivity extends Activity implements OnTouchListener {
 			case MESSAGE_STATE_CHANGE:
 				switch (msg.arg1) {
 				case BluetoothService.STATE_CONNECTED:
+					btnSend.setVisibility(View.VISIBLE);
 					break;
 				case BluetoothService.STATE_CONNECTING:
 					break;
@@ -105,9 +99,6 @@ public class ShowCropImageActivity extends Activity implements OnTouchListener {
 				// save the connected device's name
 				mConnectedDeviceName = msg.getData().getString(
 						BluetoothService.DEVICE_NAME);
-				Toast.makeText(getApplicationContext(),
-						"Connected to " + mConnectedDeviceName,
-						Toast.LENGTH_SHORT).show();
 				break;
 			case MESSAGE_TOAST:
 				break;
@@ -118,12 +109,13 @@ public class ShowCropImageActivity extends Activity implements OnTouchListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_crop_image_layout);
+		setContentView(R.layout.gnd_editable_layout);
 
 		Bundle extra = getIntent().getExtras();
 		bitmap = (Bitmap) extra.getParcelable(CropImage.RETURN_DATA_AS_BITMAP);
 
 		imageView = (ImageView) findViewById(R.id.imageView);
+		btnSend = (Button) findViewById(R.id.btnSend);
 		imageView.setImageBitmap(bitmap);
 
 		callback = new StatusCallback() {
@@ -312,7 +304,7 @@ public class ShowCropImageActivity extends Activity implements OnTouchListener {
 	}
 
 	public void setup() {
-		BluetoothService.instance.registContext(ShowCropImageActivity.this);
+		BluetoothService.instance.registContext(EditableActivity.this);
 		BluetoothService.instance.registHandler(mHandler);
 	}
 
@@ -357,13 +349,11 @@ public class ShowCropImageActivity extends Activity implements OnTouchListener {
 									if (response.getError() == null
 											&& waitToShareImage) {
 										shareImage(bitmap);
-										Toast.makeText(
-												ShowCropImageActivity.this,
+										Toast.makeText(EditableActivity.this,
 												"request permission success!",
 												Toast.LENGTH_SHORT).show();
 									} else {
-										Toast.makeText(
-												ShowCropImageActivity.this,
+										Toast.makeText(EditableActivity.this,
 												"request permission fail!",
 												Toast.LENGTH_SHORT).show();
 									}
@@ -383,11 +373,11 @@ public class ShowCropImageActivity extends Activity implements OnTouchListener {
 						@Override
 						public void onCompleted(Response response) {
 							if (response.getError() != null) {
-								Toast.makeText(ShowCropImageActivity.this,
+								Toast.makeText(EditableActivity.this,
 										"Cann't share image!",
 										Toast.LENGTH_SHORT).show();
 							} else {
-								Toast.makeText(ShowCropImageActivity.this,
+								Toast.makeText(EditableActivity.this,
 										"Share image success!",
 										Toast.LENGTH_SHORT).show();
 							}
